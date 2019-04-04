@@ -1,4 +1,5 @@
-import Image
+from PIL import Image
+from math import floor, sqrt
 
 """
 Create just the top face of the cube
@@ -10,14 +11,24 @@ width - The width of the isometric top after transformation.
 def top_face(sprite, width):
     # Resize so that the diagonal is the correct length
     # given the width that I've got
-    sprite_size = sprite.size_column
-    scale_factor = sqrt(width/2) / sprite_size
-    side_len = sprite_size * scale_factor
-    sprite.resize((side_len, side_len))
+    sprite_size, _ = sprite.size
+    print("Sprite size: ", sprite_size)
     
-    sprite.rotate(45)
+    # The size the image needs to be in order to be the
+    #   correct dimentions after rotation
+    side_len = round(width/sqrt(2))
+    print("side_len: ", side_len)
     
-    sprite.resize((width, width / 2))
+    sprite = sprite.resize((side_len, side_len))
+    sprite.save("top_resize_1.png")
+    
+    large = Image.new("RGBA", (width, width), (0,0,0,0))
+    large.paste(sprite)
+    
+    sprite = large.rotate(45)
+    sprite.save("top_rotate.png")
+    
+    sprite = sprite.resize((width, floor(width / 2)))
     
     return sprite
 
@@ -41,8 +52,8 @@ def tesselate(top, left, right, size):
     pass
 
 if __name__ == "__main__":
-    im = Image.open("dirt.png")
+    im = Image.open("testBlock.png")
     
-    top = top_face(im)
+    top = top_face(im, 24)
     
-    top.save("dirt_transformed.png")
+    top.save("top.png")
