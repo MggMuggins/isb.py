@@ -1,3 +1,4 @@
+from Augmentor import Pipeline
 from PIL import Image
 from math import floor, sqrt
 
