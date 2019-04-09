@@ -62,16 +62,18 @@ Create a full isometric image
 top, left, right - Appropriate textures
 size - finished size of the square isometric image
 """
-def tesselate(top, left, right, size):
-    base = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    base.paste(top_face(top, size))
+def tesselate(top, left, right, finish_size):
+    base = Image.new("RGBA", (finish_size, finish_size), (0, 0, 0, 0))
+    base.paste(top_face(top, finish_size))
     
-    base.paste(side_face(left, size), (0, size * 3/4))
-    base.paste(side_face(right, size), (size / 2, size * 3/4))
+    base.paste(side_face(left, finish_size, Orientation.LEFT), (0, finish_size * 3/4))
+    base.paste(side_face(right, finish_size, Orientation.RIGHT), (finish_size / 2, finish_size * 3/4))
 
 if __name__ == "__main__":
     im = Image.open("testBlock.png")
     
     top = top_face(im, 24)
+    left = side_face(im, 24, Orientation.LEFT)
     
     top.save("top.png")
+    left.save("left.png")
