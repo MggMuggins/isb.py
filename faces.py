@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 from enum import Enum
 from math import floor, sqrt
 
 from Augmentor import Pipeline
+=======
+from Augmentor.Operations import Shear
+>>>>>>> 718fc2511062e6197f8082f941385adb5cc97bbf
 from PIL import Image
 
 class Orientation(Enum):
@@ -44,8 +48,23 @@ sprite - Base 16*16 texture
 height - Height of the complete isometric cube.
          The height of the returned image will be 3/4 * height
 """
+<<<<<<< HEAD
 def side_face(sprite, height, orientation):
     pass
+=======
+def side_face(sprite, finish_size):
+    #Resizes image to correct dimensions
+    sprite_size, _ = sprite.size
+    length = round(finish_size/2)
+    sprite = sprite.resize((length, length))
+
+    #Shear commands
+    op = Shear(max_shear_left = 22.5)
+    sprite = op.perform_operation(sprite)
+    return sprite
+    
+    
+>>>>>>> 718fc2511062e6197f8082f941385adb5cc97bbf
 
 """
 Create a full isometric image
