@@ -53,7 +53,7 @@ def side_face(sprite, finish_size, orientation):
     
     side_len = round(finish_size/sqrt(2))
     large = Image.new("RGBA",(length, round(length*1.5)), (0,0,0,0))
-    large.paste(sprite)
+    large.paste(sprite) #, (round(length/2), round((length*.75)/2)))
     large.save("intermediate.png")
     
 
