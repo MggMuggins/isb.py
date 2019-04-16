@@ -45,16 +45,23 @@ height - Height of the complete isometric cube.
          The height of the returned image will be 3/4 * height
 """
 
-def side_face(sprite, finish_size, orientation):
+def side_face(sprite, finish_size, orientation):    
     #Resizes image to correct dimensions
     sprite_size, _ = sprite.size
     length = round(finish_size/2)
-    sprite = sprite.resize((length, length))
+    sprite = sprite.resize((length, round(length*.75)))
+    
+    side_len = round(finish_size/sqrt(2))
+    large = Image.new("RGBA",(length, length), (0,0,0,0))
+    large.paste(sprite)
+    large.save("intermediate.png")
+    
 
     #Shear commands
-    op = Shear(max_shear_left = 22.5)
-    sprite = op.perform_operation(sprite)
-    return sprite
+    op = Shear(max_shear_left = 45, max_shear_right = 0, probability = 100)
+    sprite = (op.perform_operation([large]))[0]
+    return(sprite)
+
 
 """
 Create a full isometric image
@@ -73,7 +80,7 @@ if __name__ == "__main__":
     im = Image.open("testBlock.png")
     
     top = top_face(im, 24)
-    left = side_face(im, 24, Orientation.LEFT)
+    left = side_face(im, 512, Orientation.LEFT)
     
     top.save("top.png")
     left.save("left.png")
