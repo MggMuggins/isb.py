@@ -49,18 +49,19 @@ def side_face(sprite, finish_size, orientation):
     #Resizes image to correct dimensions
     sprite_size, _ = sprite.size
     length = round(finish_size/2)
-    sprite = sprite.resize((length, round(length*.75)))
+    sprite = sprite.resize((length, length))
     
-    side_len = round(finish_size/sqrt(2))
     large = Image.new("RGBA",(length, round(length*1.5)), (0,0,0,0))
-    large.paste(sprite) #, (round(length/2), round((length*.75)/2)))
+    large.paste(sprite) 
     large.save("intermediate.png")
     
-
     #Shear commands
-    op = Shear(max_shear_left = 45, max_shear_right = 0, probability = 100)
+    op = Shear(max_shear_left = 45, max_shear_right = 0, probability = 1.0)
     sprite = (op.perform_operation([large]))[0]
-    return(sprite)
+    
+    
+    
+	
 
 
 """
