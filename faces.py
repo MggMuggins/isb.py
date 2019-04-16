@@ -52,18 +52,14 @@ def side_face(sprite, finish_size, orientation):
     sprite = sprite.resize((length, length))
     
     large = Image.new("RGBA",(length, round(length*1.5)), (0,0,0,0))
-    large.paste(sprite) 
+    large.paste(sprite, (0 , round(length*.25))) 
     large.save("intermediate.png")
     
     #Shear commands
     op = Shear(max_shear_left = 45, max_shear_right = 0, probability = 1.0)
-    sprite = (op.perform_operation([large]))[0]
+    return (op.perform_operation([large]))[0]
     
     
-    
-	
-
-
 """
 Create a full isometric image
 
