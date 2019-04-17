@@ -51,17 +51,18 @@ def side_face(sprite, finish_size, orientation):
     sprite = sprite.resize((length, length))
     
     large = Image.new("RGBA",(length, round(length*1.5)), (0,0,0,0))
-    large.paste(sprite, (0 , round(length*.25))) 
+    large.paste(sprite, (0 , round(length*0.5))) 
     large.save("intermediate.png")
     
     # Shear 
-    return large.transform( \
+    orient = large.transform( \
         (length, round(length*1.5)), \
         Image.AFFINE, \
         (1, 0, 0,  0.5, 1, 0))
-    
-    
-    
+    if Orientation.LEFT == orientation:
+        orient = orient.transpose(Image.FLIP_LEFT_RIGHT)
+    return orient
+
 """
 Create a full isometric image
 
@@ -70,16 +71,21 @@ size - finished size of the square isometric image
 """
 def tesselate(top, left, right, finish_size):
     base = Image.new("RGBA", (finish_size, finish_size), (0, 0, 0, 0))
+    base.paste(side_face(left, finish_size, Orientation.LEFT), (0, round(finish_size * 1/4)))
+    base.paste(side_face(right, finish_size, Orientation.RIGHT), (round(finish_size / 2), round(finish_size * 1/4)))
     base.paste(top_face(top, finish_size))
-    
-    base.paste(side_face(left, finish_size, Orientation.LEFT), (0, finish_size * 3/4))
-    base.paste(side_face(right, finish_size, Orientation.RIGHT), (finish_size / 2, finish_size * 3/4))
+    return base
 
 if __name__ == "__main__":
     im = Image.open("testBlock.png")
     
+    block = tesselate(im, im, im, 512)
+    block.save("block.png")
+    '''
     top = top_face(im, 512)
     left = side_face(im, 512, Orientation.LEFT)
     
     top.save("top.png")
     left.save("left.png")
+	'''
+	
