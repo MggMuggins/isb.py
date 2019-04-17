@@ -1,7 +1,6 @@
 from enum import Enum
 from math import floor, sqrt
 
-from Augmentor.Operations import Shear
 from PIL import Image
 
 class Orientation(Enum):
@@ -55,9 +54,12 @@ def side_face(sprite, finish_size, orientation):
     large.paste(sprite, (0 , round(length*.25))) 
     large.save("intermediate.png")
     
-    #Shear commands
-    op = Shear(max_shear_left = 45, max_shear_right = 0, probability = 1.0)
-    return (op.perform_operation([large]))[0]
+    # Shear 
+    return large.transform( \
+        (length, round(length*1.5)), \
+        Image.AFFINE, \
+        (1, 0, 0,  0.5, 1, 0))
+    
     
     
 """
@@ -76,7 +78,7 @@ def tesselate(top, left, right, finish_size):
 if __name__ == "__main__":
     im = Image.open("testBlock.png")
     
-    top = top_face(im, 24)
+    top = top_face(im, 512)
     left = side_face(im, 512, Orientation.LEFT)
     
     top.save("top.png")
