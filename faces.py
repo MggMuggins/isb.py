@@ -73,19 +73,11 @@ def tesselate(top, left, right, finish_size):
     base = Image.new("RGBA", (finish_size, finish_size), (0, 0, 0, 0))
     base.paste(side_face(left, finish_size, Orientation.LEFT), (0, round(finish_size * 1/4)))
     base.paste(side_face(right, finish_size, Orientation.RIGHT), (round(finish_size / 2), round(finish_size * 1/4)))
-    base.paste(top_face(top, finish_size))
+    base.alpha_composite(top_face(top, finish_size))
     return base
 
 if __name__ == "__main__":
     im = Image.open("testBlock.png")
     
-    block = tesselate(im, im, im, 512)
+    block = tesselate(im, im, im, 4096)
     block.save("block.png")
-    '''
-    top = top_face(im, 512)
-    left = side_face(im, 512, Orientation.LEFT)
-    
-    top.save("top.png")
-    left.save("left.png")
-	'''
-	
