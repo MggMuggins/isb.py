@@ -77,6 +77,7 @@ def tesselate(top, left, right, finish_size):
     return base
 
 if __name__ == "__main__":
+	#Replace path inside quotes to change blocks
     im = Image.open("testBlock.png")
     
     block = tesselate(im, im, im, 4096)
