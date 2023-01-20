@@ -21,19 +21,19 @@ def top_face(sprite, finish_size):
     # The size the image needs to be in order to be the
     #   correct dimentions after rotation
     side_len = round(finish_size/sqrt(2))
-    
+
     sprite = sprite.resize((side_len, side_len))
-    
+
     # Center the image on a transparent canvas
     large = Image.new("RGBA", (finish_size, finish_size), (0,0,0,0))
     translation = round(finish_size/2) - round(side_len/2)
     large.paste(sprite, (translation, translation))
-    
+
     sprite = large.rotate(45)
-    
+
     # Scale only on the y-axis
     sprite = sprite.resize((finish_size, floor(finish_size / 2)))
-    
+
     return sprite
 
 """
@@ -44,17 +44,17 @@ height - Height of the complete isometric cube.
          The height of the returned image will be 3/4 * height
 """
 
-def side_face(sprite, finish_size, orientation):    
+def side_face(sprite, finish_size, orientation):
     #Resizes image to correct dimensions
     sprite_size, _ = sprite.size
     length = round(finish_size/2)
     sprite = sprite.resize((length, length))
-    
+
     large = Image.new("RGBA",(length, round(length*1.5)), (0,0,0,0))
-    large.paste(sprite, (0 , round(length*0.5))) 
+    large.paste(sprite, (0 , round(length*0.5)))
     large.save("intermediate.png")
-    
-    # Shear 
+
+    # Shear
     orient = large.transform( \
         (length, round(length*1.5)), \
         Image.AFFINE, \
@@ -79,6 +79,6 @@ def tesselate(top, left, right, finish_size):
 if __name__ == "__main__":
 	#Replace path inside quotes to change blocks
     im = Image.open("testBlock.png")
-    
+
     block = tesselate(im, im, im, 4096)
     block.save("block.png")
