@@ -7,6 +7,7 @@ import png
 from pathlib import Path
 from svgwrite.container import Group
 from svgwrite.drawing import Drawing
+from svgwrite.filters import Filter
 from svgwrite.shapes import Rect
 
 
@@ -43,7 +44,15 @@ def sprite(png_path):
 
 
 # Thanks minecraft overviewer for a how-to
-def block(top_svg, left_svg, right_svg):
+def block(drawing, top_svg, left_svg, right_svg):
+    darken_by = 0.35
+    darken = drawing.filter(id="darken")
+    drawing.add(darken)
+    fect = darken.feComponentTransfer()
+    fect.feFuncR("linear", slope=darken_by)
+    fect.feFuncG("linear", slope=darken_by)
+    fect.feFuncB("linear", slope=darken_by)
+
     top_svg.translate(12, 0)
     top_svg.scale(1 + 1 / 16)
     top_svg.scale(1, 0.5)
@@ -51,9 +60,10 @@ def block(top_svg, left_svg, right_svg):
 
     left_svg.translate(0, 6)
     left_svg.scale(0.75)
-    # Not sure why 26.5deg is interesting, overviewer says shear by 1.5 in y
+    # Not sure why 26.5deg is interesting, Overviewer says shear by 1.5 in y
     left_svg.skewY(26.5)
 
+    right_svg['filter'] = "url(#darken)"
     right_svg.translate(12, 12)
     right_svg.scale(0.75)
     right_svg.skewY(-26.5)
@@ -98,8 +108,10 @@ if __name__ == "__main__":
     svg_path = args.outfile \
         if args.outfile is not None else png_path.with_suffix(".svg")
 
+    svg = Drawing(svg_path)
+
     grp = sprite(png_path)
-    size = (16, 16)
+    width, height = (16, 16)
 
     if args.block:
         left = sprite(args.left) \
@@ -107,9 +119,10 @@ if __name__ == "__main__":
         right = sprite(args.right) \
             if args.right is not None else copy.deepcopy(grp)
 
-        grp = block(grp, left, right)
-        size = (24, 24)
+        grp = block(svg, grp, left, right)
+        width, height = (24, 24)
 
-    svg = Drawing(svg_path, size=size)
     svg.add(grp)
+    svg['width'] = width
+    svg['height'] = height
     svg.save(svg_path)
